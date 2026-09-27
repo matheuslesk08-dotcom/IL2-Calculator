@@ -35,6 +35,17 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Repair bundled bombsight image
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('app/src/main/assets/scope.jpg')
+          b = p.read_bytes()
+          if len(b) == 3001:
+              b = b[:152] + (b'v' * 6) + b[152:]
+              p.write_bytes(b)
+          PY
+
       - name: Build debug APK
         run: gradle :app:assembleDebug
 
