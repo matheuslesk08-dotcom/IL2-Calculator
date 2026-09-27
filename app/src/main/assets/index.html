@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c1013">
+<title>IL-2 1946 Bombing Calculator v2.1.1</title>
+<style>
+:root{--bg:#0c1013;--panel:#151b1f;--panel2:#20282d;--line:#52616a;--text:#fff;--accent:#d0ad61}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(rgba(7,11,16,.22),rgba(7,11,16,.30)),url('background.jpg') center/cover fixed no-repeat;color:var(--text);font:14px system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh}
+.app{max-width:900px;margin:auto;padding:10px}
+h1{font-size:17px;margin:0;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.45)} small{color:#f2f5f7;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:11px 0}
+button,input,select{font:inherit}
+.tab,.mode{border:1px solid rgba(154,183,209,.42);background:rgba(16,24,34,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fff;padding:10px;border-radius:9px;font-weight:800}
+.tab.active,.mode.active{background:var(--accent);color:#111;border-color:var(--accent)}
+.page{display:none} .page.active{display:block}
+.card{background:rgba(20,29,39,.60);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(157,183,210,.34);box-shadow:0 10px 30px rgba(0,0,0,.18);border-radius:13px;padding:12px;margin-bottom:9px}
+h2{font-size:14px;margin:0 0 9px;color:#fff;font-weight:900}
+.sectionNote{font-size:11px;color:#dce5e9;line-height:1.4;margin:-3px 0 10px}
+.g2{display:grid;grid-template-columns:1fr 110px;gap:7px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+label{display:block;font-size:11px;font-weight:800;margin-bottom:4px;color:#fff}
+input,select{width:100%;min-height:43px;border:1px solid rgba(162,187,213,.35);border-radius:8px;background:rgba(28,40,54,.72);color:#fff;padding:9px;font-weight:650}
+.gap{height:7px}
+.out{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.o{background:rgba(6,12,18,.72);border:1px solid rgba(162,187,213,.34);border-radius:9px;padding:8px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.o.big{grid-column:1/-1;padding:12px}
+.k{color:#fff;font-size:9px;font-weight:800;text-transform:uppercase;opacity:.95}
+.v{font-weight:900;margin-top:2px;color:#fff;font-size:16px}
+.o.big .v{font-size:25px;color:#fff}
+.modes{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.mode{padding:8px;font-size:11px}
+.scopeRow{display:grid;grid-template-columns:1fr 52px;gap:7px;align-items:center}
+#scope{position:relative;width:100%;aspect-ratio:1;background:#000;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+#scopeGroup{position:absolute;left:50%;top:50%;width:100%;height:100%;transform:translate(-50%,-50%) scale(1);transform-origin:center center;will-change:transform}
+#scopeBg{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;background:#000}
+.dot{position:absolute;left:50%;width:4.2%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:rgba(255,0,0,.50);border:2px solid rgba(255,0,0,.70);box-shadow:none}
+.zoom{height:65vw;max-height:490px;min-height:235px;display:flex;flex-direction:column;align-items:center;background:#0d1215;border:1px solid var(--line);border-radius:9px;padding:6px 3px}
+#z{writing-mode:vertical-lr;direction:rtl;-webkit-appearance:slider-vertical;appearance:slider-vertical;flex:1;width:25px;padding:0;border:0}
+.note{font-size:10px;line-height:1.35;margin-top:7px;color:#fff}
+.primary{width:100%;border:0;border-radius:9px;padding:11px;background:var(--accent);font-weight:900;color:#111;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.separator{height:1px;background:#39464e;margin:12px 0}
+@media(max-width:700px){.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>IL-2 1946 FLIGHT & BOMBING CALCULATOR</h1>
+<small>v2.1.1</small>
+<div class="tabs"><button class="tab active" data-p="f">Flight</button><button class="tab" data-p="b">Bombing</button></div>
+<section id="f" class="page active">
+<div class="card"><h2>Flight data</h2><div class="g2"><div><label>IAS</label><input id="ias" type="number" value="0"></div><div><label>Unit</label><select id="iu"><option value="kmh">km/h</option><option value="mph">mph</option></select></div></div><div class="gap"></div><div class="g2"><div><label>Altitude</label><input id="alt" type="number" value="0"></div><div><label>Unit</label><select id="au"><option value="m">meters</option><option value="ft">feet</option></select></div></div></div>
+<div class="card"><h2>Converted / estimated</h2><div class="out"><div class="o"><div class="k">IAS km/h</div><div id="ok" class="v">0 km/h</div></div><div class="o"><div class="k">IAS mph</div><div id="om" class="v">0 mph</div></div><div class="o"><div class="k">Altitude m</div><div id="am" class="v">0 m</div></div><div class="o"><div class="k">Altitude ft</div><div id="af" class="v">0 ft</div></div><div class="o"><div class="k">Estimated TAS</div><div id="tk" class="v">0 km/h</div></div><div class="o"><div class="k">Estimated TAS</div><div id="tm" class="v">0 mph</div></div></div></div>
+<button id="copy" class="primary">Use these values in Bombing</button>
+</section>
+<section id="b" class="page">
+<div class="card"><h2>Aircraft data</h2><div class="sectionNote">The bombsight uses speed + altitude. The spread planner uses speed only.</div><div class="g3"><div><label>Aircraft speed</label><input id="bs" type="number" value="0"></div><div><label>Unit</label><select id="bu"><option value="kmh">km/h</option><option value="mph">mph</option></select></div><div><label>Entered speed is</label><select id="bt"><option value="ias">IAS</option><option value="tas">TAS</option></select></div></div><div class="gap"></div><div class="g2"><div><label>Altitude above target</label><input id="ba" type="number" value="0"></div><div><label>Unit</label><select id="bau"><option value="m">meters</option><option value="ft">feet</option></select></div></div></div>
+<div class="card"><h2>Bombsight</h2><div class="sectionNote">This angle is calculated only from aircraft speed and altitude. Bomb count, interval and release mode do not change it.</div><div class="out"><div class="o big"><div class="k">Bombsight angle from straight down</div><div id="ang" class="v">0.0°</div></div><div class="o"><div class="k">Used TAS</div><div id="ut" class="v">0 km/h</div></div><div class="o"><div class="k">Idealized fall time</div><div id="ft" class="v">0.0 s</div></div><div class="o big"><div class="k">Bomb forward travel before impact</div><div id="fw" class="v">0 m</div></div></div></div>
+<div class="card"><h2>Bomb spread planner</h2><div class="sectionNote">This is only the final impact pattern on the ground, viewed straight down after the bombs have hit. Altitude and bombsight angle do not affect this preview.</div><label>Release mode</label><div class="modes"><button class="mode active" data-m="train">Train</button><button class="mode" data-m="pairs">Pairs</button><button class="mode" data-m="single">Single</button><button class="mode" data-m="salvo">Salvo</button></div><div class="gap"></div><div class="g2"><div><label>Bombs</label><input id="n" type="number" value="8" min="1"></div><div><label>Interval (s)</label><input id="iv" type="number" value="0.25" step="0.05" min="0"></div></div><div class="separator"></div><div class="out"><div class="o"><div class="k">Impact spacing</div><div id="sp" class="v">0.0 m</div></div><div class="o"><div class="k">Pattern length</div><div id="pl" class="v">0.0 m</div></div><div class="o"><div class="k">Release events</div><div id="ev" class="v">8</div></div><div class="o"><div class="k">Release duration</div><div id="dur" class="v">1.75 s</div></div></div></div>
+<div class="card"><h2>Bomb spread preview</h2><div class="scopeRow"><div id="scope"><div id="scopeGroup"><img id="scopeBg" alt="IL-2 bombsight reference" src="scope.jpg"></div></div><div class="zoom"><small>IN</small><input id="z" type="range" min="1" max="1.6" value="1" step="0.01"><b id="zv">1.00×</b><small>BASE</small></div></div><div class="note">The red rings show the completed impact pattern, centered in the view. The bombsight angle is not used here.</div></div>
+</section></div>
+<script>
+(()=>{const $=id=>document.getElementById(id);const K=.6213711922,F=3.280839895,G=9.80665,R=287.05287,T0=288.15,P0=101325,RHO0=1.225,L=.0065,BASE_GROUND=3200;let mode='train';const kmh=(v,u)=>u==='mph'?v/K:v;const meters=(v,u)=>u==='ft'?v/F:v;function density(h){h=Math.max(0,h);if(h<=11000){const t=T0-L*h,p=P0*Math.pow(t/T0,G/(R*L));return p/(R*t)}const t11=T0-L*11000,p11=P0*Math.pow(t11/T0,G/(R*L)),p=p11*Math.exp(-G*(h-11000)/(R*t11));return p/(R*t11)}const tasFromIAS=(v,h)=>v/Math.sqrt(Math.max(.0001,density(h)/RHO0));const dist=v=>Math.abs(v)>=1000?(v/1000).toFixed(2)+' km':Math.round(v)+' m';function flight(){const i=kmh(+$('ias').value,$('iu').value),a=meters(+$('alt').value,$('au').value),t=tasFromIAS(i,a);$('ok').textContent=Math.round(i)+' km/h';$('om').textContent=Math.round(i*K)+' mph';$('am').textContent=Math.round(a)+' m';$('af').textContent=Math.round(a*F)+' ft';$('tk').textContent=Math.round(t)+' km/h';$('tm').textContent=Math.round(t*K)+' mph'}function commonData(){const a=Math.max(0,meters(+$('ba').value,$('bau').value));let v=Math.max(0,kmh(+$('bs').value,$('bu').value));if($('bt').value==='ias')v=tasFromIAS(v,a);return{a,v,ms:v/3.6}}function bombsight(){const d=commonData();const fall=d.a>0?Math.sqrt(2*d.a/G):0;const forward=d.ms*fall;const angle=d.a>0?Math.atan2(forward,d.a)*180/Math.PI:0;$('ut').textContent=Math.round(d.v)+' km/h';$('ft').textContent=fall.toFixed(1)+' s';$('fw').textContent=dist(forward);$('ang').textContent=angle.toFixed(1)+'°'}function spreadData(){const d=commonData();const bombs=Math.max(1,Math.floor(+$('n').value||1));let interval=Math.max(0,+$('iv').value||0),events=bombs,bombsPerEvent=1;if(mode==='pairs'){events=Math.ceil(bombs/2);bombsPerEvent=2}if(mode==='single'){events=1;bombsPerEvent=1;interval=0}if(mode==='salvo'){events=1;bombsPerEvent=bombs;interval=0}const spacing=events>1?d.ms*interval:0;const length=events>1?spacing*(events-1):0;const duration=events>1?interval*(events-1):0;return{...d,bombs,interval,events,bombsPerEvent,spacing,length,duration}}function updateSpread(){const d=spreadData();$('sp').textContent=d.spacing.toFixed(1)+' m';$('pl').textContent=d.length.toFixed(1)+' m';$('ev').textContent=String(d.events);$('dur').textContent=d.duration.toFixed(2)+' s';$('zv').textContent=(+$('z').value).toFixed(2)+'×';const group=$('scopeGroup');group.style.transform='translate(-50%,-50%) scale('+(+$('z').value)+')';group.querySelectorAll('.dot').forEach(n=>n.remove());const stage=$('scope'),ppm=stage.clientWidth/BASE_GROUND;for(let i=0;i<d.events;i++){const offset=d.events===1?0:(i*d.spacing-d.length/2);const y=50+(offset*ppm/stage.clientHeight)*100;const copies=(mode==='pairs'&&i===d.events-1&&d.bombs%2===1)?1:d.bombsPerEvent;for(let j=0;j<copies;j++){const dot=document.createElement('div');dot.className='dot';dot.style.top=y+'%';if(copies>1)dot.style.left=(50+(j-(copies-1)/2)*1.9)+'%';group.appendChild(dot)}}}function updateAll(){bombsight();updateSpread()}document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(q=>q.classList.toggle('active',q===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===b.dataset.p));if(b.dataset.p==='b')updateAll()});document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('.mode').forEach(q=>q.classList.toggle('active',q===b));$('iv').disabled=mode==='single'||mode==='salvo';$('n').disabled=mode==='single';updateSpread()});['ias','iu','alt','au'].forEach(id=>{$(id).oninput=flight;$(id).onchange=flight});['bs','bu','bt','ba','bau'].forEach(id=>{$(id).oninput=updateAll;$(id).onchange=updateAll});['n','iv','z'].forEach(id=>{$(id).oninput=updateSpread;$(id).onchange=updateSpread});$('copy').onclick=()=>{$('bs').value=$('ias').value;$('bu').value=$('iu').value;$('ba').value=$('alt').value;$('bau').value=$('au').value;$('bt').value='ias';document.querySelector('[data-p="b"]').click()};window.addEventListener('resize',updateSpread);flight();updateAll()})();
+</script>
+</body>
+</html>
