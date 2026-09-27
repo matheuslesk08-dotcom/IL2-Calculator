@@ -7,11 +7,11 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.il2calc.app'
+        applicationId 'com.il2calc.app.v212'
         minSdk 23
         targetSdk 35
-        versionCode 211
-        versionName '2.1.1'
+        versionCode 212
+        versionName '2.1.2'
     }
 
     buildTypes {
