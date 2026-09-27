@@ -7,6 +7,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class MainActivity extends Activity {
     private WebView webView;
 
@@ -30,7 +33,23 @@ public class MainActivity extends Activity {
 
         webView.setWebViewClient(new WebViewClient());
         setContentView(webView);
-        webView.loadUrl("file:///android_asset/index.html");
+
+        StringBuilder html = new StringBuilder();
+        try {
+            for (int i = 1; i <= 6; i++) {
+                String file = String.format("part%02d.txt", i);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open(file), "UTF-8"));
+                char[] buffer = new char[8192];
+                int read;
+                while ((read = reader.read(buffer)) != -1) {
+                    html.append(buffer, 0, read);
+                }
+                reader.close();
+            }
+            webView.loadDataWithBaseURL("file:///android_asset/", html.toString(), "text/html", "UTF-8", null);
+        } catch (Exception e) {
+            webView.loadData("<h2 style='color:white;background:#111;padding:20px'>Could not load app.</h2>", "text/html", "UTF-8");
+        }
     }
 
     @Override
